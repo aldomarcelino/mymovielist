@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import MovieCard from "../components/MovieCard";
+import Pagination from "../components/Pagination";
 import SearchPage from "../components/SearchPage";
 const key = process.env.REACT_APP_TMDBKEY;
 
 export default function Home() {
   const [movies, setMovies] = useState([]);
+  const [page, setPage] = useState(1);
   useEffect(() => {
     fetch(
-      `https://api.themoviedb.org/3/movie/upcoming?api_key=${key}&language=en-US&page=1`
+      `https://api.themoviedb.org/3/movie/upcoming?api_key=${key}&language=en-US&page=${page}`
     )
       .then((res) => res.json())
       .then((res) => {
@@ -17,7 +19,11 @@ export default function Home() {
       .catch((err) => {
         console.error("Error:", err);
       });
-  }, []);
+  }, [page]);
+  const handlePage = (page) => {
+    console.log("current page", page);
+    setPage(page);
+  };
   return (
     <div>
       <SearchPage />
@@ -30,6 +36,7 @@ export default function Home() {
             <MovieCard movie={movie} key={movie.id} />
           ))}
         </div>
+        <Pagination handlePage={handlePage} />
       </div>
     </div>
   );
