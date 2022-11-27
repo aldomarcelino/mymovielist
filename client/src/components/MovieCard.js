@@ -1,8 +1,12 @@
 import { AiFillStar } from "react-icons/ai";
+import { NavLink } from "react-router-dom";
 
 export default function MovieCard({ movie }) {
   return (
-    <div className="w-[160px] sm:w-[200px] md:w-[240px] lg:w-[170px] inline-block cursor-pointer relative p-2">
+    <NavLink
+      to={`movie/${movie.id}`}
+      className="w-[240px] sm:w-[170px] md:w-[170px] lg:w-[170px] inline-block cursor-pointer relative p-2"
+    >
       <img
         className="w-full h-auto block rounded-sm"
         src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`}
@@ -17,6 +21,6 @@ export default function MovieCard({ movie }) {
           {movie.vote_average}
         </div>
       </div>
-    </div>
+    </NavLink>
   );
 }

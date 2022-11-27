@@ -1,11 +1,11 @@
 import React from "react";
 import { FiSearch } from "react-icons/fi";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 export default function Navbar() {
   const navigate = useNavigate();
   return (
     <nav>
-      <div className="bg-[#212121] ">
+      <div className="bg-[#0f0e0e] ">
         <div className="flex flex-row p-3 items-center justify-between mx-[15%] ">
           <button
             className="bg-yellow-500 rounded-sm p-2"
