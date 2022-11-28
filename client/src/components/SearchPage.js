@@ -3,31 +3,28 @@ import { AiOutlineRise } from "react-icons/ai";
 import { BsKeyboardFill } from "react-icons/bs";
 import { useEffect, useState } from "react";
 import SearchMovieCard from "./SearchMovieCard";
-const key = process.env.REACT_APP_TMDBKEY;
-const key2 = process.env.REACT_APP_OMDBKEY;
+import { useSelector, useDispatch } from "react-redux";
+import {
+  getAllGenres,
+  getMmoviesOmdb,
+  selectGenres,
+  selectSerchMovies,
+  setSerchMovies,
+} from "../store/slice/movieSlice";
 
 export default function SearchPage({ open, setOff }) {
-  const [genres, setGenres] = useState([]);
   const [search, setSearch] = useState("");
-  const [movies, setMovies] = useState("");
+  const genres = useSelector(selectGenres);
+  const dispatch = useDispatch();
+  let movies = useSelector(selectSerchMovies);
 
   useEffect(() => {
-    fetch(
-      `https://api.themoviedb.org/3/genre/movie/list?api_key=${key}&language=en-US`
-    )
-      .then((res) => res.json())
-      .then((res) => {
-        console.log("Success:", res.genres);
-        setGenres(res.genres);
-      })
-      .catch((err) => {
-        console.error("Error:", err);
-      });
+    dispatch(getAllGenres());
   }, []);
 
   useEffect(() => {
     if (!open) {
-      setMovies("");
+      dispatch(setSerchMovies(null));
       setSearch("");
     }
   }, [open]);
@@ -39,19 +36,11 @@ export default function SearchPage({ open, setOff }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch(`https://www.omdbapi.com/?s=${search}&apikey=${key2}`)
-      .then((res) => res.json())
-      .then((res) => {
-        console.log("Success:", res.Search);
-        setMovies(res.Search);
-      })
-      .catch((err) => {
-        console.error("Error:", err);
-      });
+    dispatch(getMmoviesOmdb(search));
   };
 
   const handleClose = () => {
-    setMovies("");
+    dispatch(setSerchMovies(null));
     setSearch("");
     setOff();
   };

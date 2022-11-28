@@ -5,14 +5,16 @@ import YouTube from "react-youtube";
 import { MdPhotoLibrary, MdVideoLibrary } from "react-icons/md";
 import { HiPlus } from "react-icons/hi";
 import { AiOutlineDown, AiFillStar } from "react-icons/ai";
+import { useSelector, useDispatch } from "react-redux";
+import { getTheMovie, selectMovie } from "../store/slice/movieSlice";
 
 const key = process.env.REACT_APP_TMDBKEY;
-const key2 = process.env.REACT_APP_OMDBKEY;
 
 export default function MovieDetail() {
   const [movie, setMovie] = useState("");
-  const [theMovie, setTheMovie] = useState("");
   const [trailerUrl, setTrailerUrl] = useState("");
+  const theMovie = useSelector(selectMovie);
+  const dispatch = useDispatch();
   const { id } = useParams();
 
   useEffect(() => {
@@ -28,20 +30,10 @@ export default function MovieDetail() {
         console.error("Error:", err);
       });
   }, []);
+
   useEffect(() => {
-    if (movie)
-      fetch(`http://www.omdbapi.com/?i=${movie.imdb_id}&apikey=${key2}`)
-        .then((res) => res.json())
-        .then((res) => {
-          console.log("Succes:", res);
-          setTheMovie(res);
-        })
-        .catch((err) => {
-          console.error("Error:", err);
-        });
-  }, [movie]);
-  useEffect(() => {
-    if (!trailerUrl && movie) {
+    if (movie) {
+      dispatch(getTheMovie(movie.imdb_id));
       movieTrailer(movie?.title || "")
         .then((url) => {
           const ulrParams = new URLSearchParams(new URL(url).search);
@@ -50,7 +42,7 @@ export default function MovieDetail() {
         .catch((error) => console.log(error));
     } else setTrailerUrl("");
   }, [movie]);
-  
+
   return (
     <div className="mx-[16%] mt-10 text-teal-50 font-semibold">
       {movie ? (

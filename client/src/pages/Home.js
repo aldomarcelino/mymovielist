@@ -1,29 +1,23 @@
 import React, { useEffect, useState } from "react";
 import MovieCard from "../components/MovieCard";
 import Pagination from "../components/Pagination";
-const key = process.env.REACT_APP_TMDBKEY;
+import { useSelector, useDispatch } from "react-redux";
+import { getMoviesTmdb, selectMovies } from "../store/slice/movieSlice";
 
 export default function Home() {
-  const [movies, setMovies] = useState([]);
+  const movies = useSelector(selectMovies);
+  const dispatch = useDispatch();
   const [page, setPage] = useState(1);
+
   useEffect(() => {
-    fetch(
-      `https://api.themoviedb.org/3/movie/upcoming?api_key=${key}&language=en-US&page=${page}`
-    )
-      .then((res) => res.json())
-      .then((res) => {
-        console.log("Succes:", res.results);
-        res = res.results.slice(0, 18);
-        setMovies(res);
-      })
-      .catch((err) => {
-        console.error("Error:", err);
-      });
+    dispatch(getMoviesTmdb(page));
   }, [page]);
+
   const handlePage = (page) => {
     console.log("current page", page);
     setPage(page);
   };
+
   return (
     <div>
       <div className="mt-10 mx-auto sm:px-6 lg:max-w-[74%] lg:px-12">

@@ -11,6 +11,7 @@ export default function Navbar() {
     if (open) setOff();
     else setOn();
   };
+
   return (
     <>
       <nav>

@@ -5,24 +5,17 @@ import YouTube from "react-youtube";
 import { MdPhotoLibrary, MdVideoLibrary } from "react-icons/md";
 import { HiPlus } from "react-icons/hi";
 import { AiOutlineDown, AiFillStar } from "react-icons/ai";
-
-const key = process.env.REACT_APP_OMDBKEY;
+import { useSelector, useDispatch } from "react-redux";
+import { getTheMovie, selectMovie } from "../store/slice/movieSlice";
 
 export default function SearchMovieDetail() {
-  const [theMovie, setTheMovie] = useState("");
   const [trailerUrl, setTrailerUrl] = useState("");
+  const theMovie = useSelector(selectMovie);
+  const dispatch = useDispatch();
   const { id } = useParams();
 
   useEffect(() => {
-    fetch(`http://www.omdbapi.com/?i=${id}&apikey=${key}`)
-      .then((res) => res.json())
-      .then((res) => {
-        console.log("Succes:", res);
-        setTheMovie(res);
-      })
-      .catch((err) => {
-        console.error("Error:", err);
-      });
+    dispatch(getTheMovie(id));
   }, [id]);
 
   useEffect(() => {
