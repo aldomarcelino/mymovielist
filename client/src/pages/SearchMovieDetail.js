@@ -108,7 +108,7 @@ export default function SearchMovieDetail() {
           <div className="mt-5 flex flex-row justify-between">
             <div className="w-[65%]">
               <div className="flex flex-row gap-3">
-                {theMovie.Genre.split(",").map((genre, index) => (
+                {theMovie.Genre?.split(",").map((genre, index) => (
                   <div
                     className="rounded-3xl py-1 px-3 border-2 border-gray-500 "
                     key={index}
