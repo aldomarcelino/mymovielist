@@ -5,7 +5,7 @@ export default function MovieCard({ movie }) {
   return (
     <NavLink
       to={`movie/${movie.id}`}
-      className="w-[240px] sm:w-[170px] md:w-[170px] lg:w-[170px] inline-block cursor-pointer relative p-2"
+      className="w-[220px] sm:w-[220px] md:w-[220px] lg:w-[220px] xl:w-[200px] inline-block cursor-pointer relative p-2"
     >
       <img
         className="w-full h-auto block rounded-sm"

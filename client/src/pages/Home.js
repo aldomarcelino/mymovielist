@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import MovieCard from "../components/MovieCard";
 import Pagination from "../components/Pagination";
-import SearchPage from "../components/SearchPage";
 const key = process.env.REACT_APP_TMDBKEY;
 
 export default function Home() {
@@ -14,7 +13,8 @@ export default function Home() {
       .then((res) => res.json())
       .then((res) => {
         console.log("Succes:", res.results);
-        setMovies(res.results);
+        res = res.results.slice(0, 18);
+        setMovies(res);
       })
       .catch((err) => {
         console.error("Error:", err);
@@ -26,12 +26,11 @@ export default function Home() {
   };
   return (
     <div>
-      <SearchPage />
-      <div className="mt-10 mx-auto sm:px-6 lg:max-w-7xl lg:px-12">
+      <div className="mt-10 mx-auto sm:px-6 lg:max-w-[74%] lg:px-12">
         <h1 className="text-white font-extrabold text-3xl">
           Original MyMovieList
         </h1>
-        <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 xl:gap-x-8">
+        <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 xl:gap-x-8">
           {movies?.map((movie) => (
             <MovieCard movie={movie} key={movie.id} />
           ))}

@@ -6,68 +6,49 @@ import { MdPhotoLibrary, MdVideoLibrary } from "react-icons/md";
 import { HiPlus } from "react-icons/hi";
 import { AiOutlineDown, AiFillStar } from "react-icons/ai";
 
-const key = process.env.REACT_APP_TMDBKEY;
-const key2 = process.env.REACT_APP_OMDBKEY;
+const key = process.env.REACT_APP_OMDBKEY;
 
-export default function MovieDetail() {
-  const [movie, setMovie] = useState("");
+export default function SearchMovieDetail() {
   const [theMovie, setTheMovie] = useState("");
   const [trailerUrl, setTrailerUrl] = useState("");
   const { id } = useParams();
 
   useEffect(() => {
-    fetch(
-      `https://api.themoviedb.org/3/movie/${id}?api_key=${key}&language=en-US`
-    )
+    fetch(`http://www.omdbapi.com/?i=${id}&apikey=${key}`)
       .then((res) => res.json())
       .then((res) => {
         console.log("Succes:", res);
-        setMovie(res);
+        setTheMovie(res);
       })
       .catch((err) => {
         console.error("Error:", err);
       });
-  }, []);
+  }, [id]);
+
   useEffect(() => {
-    if (movie)
-      fetch(`http://www.omdbapi.com/?i=${movie.imdb_id}&apikey=${key2}`)
-        .then((res) => res.json())
-        .then((res) => {
-          console.log("Succes:", res);
-          setTheMovie(res);
-        })
-        .catch((err) => {
-          console.error("Error:", err);
-        });
-  }, [movie]);
-  useEffect(() => {
-    if (!trailerUrl && movie) {
-      movieTrailer(movie?.title || "")
-        .then((url) => {
-          const ulrParams = new URLSearchParams(new URL(url).search);
-          setTrailerUrl(ulrParams.get("v"));
-        })
-        .catch((error) => console.log(error));
-    } else setTrailerUrl("");
-  }, [movie]);
-  
+    movieTrailer(theMovie?.Title || "")
+      .then((url) => {
+        const ulrParams = new URLSearchParams(new URL(url).search);
+        setTrailerUrl(ulrParams.get("v"));
+      })
+      .catch((error) => console.log(error));
+  }, [theMovie]);
+
   return (
     <div className="mx-[16%] mt-10 text-teal-50 font-semibold">
-      {movie ? (
+      {theMovie ? (
         <div>
           <div className="flex flex-row justify-between">
             <div>
               <h1 className="text-white sm:text-xl md:text-3xl lg:text-5xl">
-                {movie.title}
+                {theMovie.Title}
               </h1>
               <div className="flex flex-row text-gray-300 gap-1 text-sm my-3">
-                <p>{movie.release_date.substr(0, 4)}</p>
+                <p>{theMovie.Year}</p>
                 <p>•</p>
-                {movie.adult ? <p>R</p> : <p>PG-13</p>}
+                <p>{theMovie.Rated}</p>
                 <p>•</p>
-                <span>
-                  {Math.floor(movie.runtime / 60)}h {movie.runtime % 60}m
-                </span>
+                <p>{theMovie.Runtime}</p>
               </div>
             </div>
             <div className="flex items-center gap-4 ">
@@ -92,7 +73,7 @@ export default function MovieDetail() {
                   >
                     <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-2.6 0-5-1.3-6.4-3.3l2.8-3.4 1.3 1.5c.4.4 1 .4 1.3 0l2.9-3.2 1.3 1.4c.3.3.8.1.8-.3V8.5c0-.3-.2-.5-.5-.5h-4c-.4 0-.6.5-.3.8l1.3 1.4-2.2 2.5L9 11.3c-.4-.4-1-.4-1.3 0L4.6 15c-.4-.9-.6-1.9-.6-3 0-4.4 3.6-8 8-8s8 3.6 8 8-3.6 8-8 8z"></path>
                   </svg>
-                  {movie.popularity}
+                  {theMovie.imdbVotes}
                 </div>
               </div>
             </div>
@@ -101,8 +82,8 @@ export default function MovieDetail() {
             <div className="w-[200px] sm:w-[220px] md:w-[250px] lg:w-[280px]">
               <img
                 className="w-full h-auto block rounded-sm"
-                src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
-                alt={movie.title}
+                src={theMovie.Poster}
+                alt={theMovie.Title}
               />
             </div>
             {trailerUrl ? (
@@ -134,17 +115,17 @@ export default function MovieDetail() {
           <div className="mt-5 flex flex-row justify-between">
             <div className="w-[65%]">
               <div className="flex flex-row gap-3">
-                {movie?.genres.map((genre) => (
+                {theMovie.Genre.split(",").map((genre, index) => (
                   <div
                     className="rounded-3xl py-1 px-3 border-2 border-gray-500 "
-                    key={genre.id}
+                    key={index}
                   >
-                    {genre.name}
+                    {genre}
                   </div>
                 ))}
               </div>
               <div className="mt-5 border-b pb-3 border-gray-500 ">
-                <p>{movie.overview}</p>
+                <p>{theMovie.Plot}</p>
               </div>
               <div className="flex mt-3 border-b pb-3 border-gray-500 gap-5">
                 Directors <p className="text-[#5799ef]">{theMovie.Director}</p>
