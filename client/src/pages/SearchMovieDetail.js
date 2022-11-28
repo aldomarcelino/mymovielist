@@ -9,8 +9,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { getTheMovie, selectMovie } from "../store/slice/movieSlice";
 
 export default function SearchMovieDetail() {
-  const [trailerUrl, setTrailerUrl] = useState("");
   const theMovie = useSelector(selectMovie);
+  const [trailerUrl, setTrailerUrl] = useState("");
   const dispatch = useDispatch();
   const { id } = useParams();
 
